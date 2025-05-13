@@ -1,19 +1,19 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\InventoryManagement;
 use App\Livewire\MealManagement;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\UserManagement;
 use App\Livewire\CategoryManagement;
+
 use App\Livewire\OrderManagement;
 
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

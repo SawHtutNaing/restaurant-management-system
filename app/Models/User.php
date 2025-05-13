@@ -10,6 +10,7 @@ class User extends Authenticatable
     use Notifiable;
     use HasFactory;
 
+
     protected $fillable = [
         'name',
         'email',
@@ -40,5 +41,8 @@ class User extends Authenticatable
     public function isCustomer()
     {
         return $this->role === 'customer';
+    }
+    public function orders(){
+        return $this->hasMany(Order::class);
     }
 }

@@ -14,6 +14,7 @@ class UserManagement extends Component
     public $editing = false;
     public $userId;
     public $search = '';
+    public $showModal = false;
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -38,6 +39,21 @@ class UserManagement extends Component
         ])->layout('layouts.app');
     }
 
+    public function openModal($edit = false, $id = null)
+    {
+        $this->resetForm();
+        if ($edit && $id) {
+            $this->edit($id);
+        }
+        $this->showModal = true;
+    }
+
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->resetForm();
+    }
+
     public function create()
     {
         $this->validate();
@@ -49,7 +65,7 @@ class UserManagement extends Component
             'role' => $this->role,
         ]);
 
-        $this->resetForm();
+        $this->closeModal();
         session()->flash('message', 'User created successfully.');
     }
 
@@ -88,13 +104,24 @@ class UserManagement extends Component
 
         $user->update($data);
 
-        $this->resetForm();
+        $this->closeModal();
         session()->flash('message', 'User updated successfully.');
     }
 
     public function delete($id)
     {
-        User::findOrFail($id)->delete();
+        if ($id == auth()->id()) {
+            session()->flash('error', 'Cannot delete the currently logged-in user.');
+            return;
+        }
+
+        $user = User::findOrFail($id);
+        if ($user->orders()->count() > 0) {
+            session()->flash('error', 'Cannot delete user: they have associated orders.');
+            return;
+        }
+
+        $user->delete();
         session()->flash('message', 'User deleted successfully.');
     }
 

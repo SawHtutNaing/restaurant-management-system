@@ -59,6 +59,9 @@
                     <a href="#menu" class="text-dark hover:text-gold transition duration-300">Menu</a>
                     <a href="#gallery" class="text-dark hover:text-gold transition duration-300">Gallery</a>
                     <a href="#contact" class="text-dark hover:text-gold transition duration-300">Contact</a>
+                    <span  class="text-dark hover:text-gold transition duration-300">
+                        <a href="/register">Register</a>
+                         / <a href="/login">Login</a> </span>
                 </div>
 
                 <div class="hidden md:block">
@@ -73,6 +76,8 @@
                 <a href="#menu" class="block py-2 text-dark hover:text-gold">Menu</a>
                 <a href="#gallery" class="block py-2 text-dark hover:text-gold">Gallery</a>
                 <a href="#contact" class="block py-2 text-dark hover:text-gold">Contact</a>
+                <span href="#contact" class="block py-2 text-dark hover:text-gold"><a href="/register">Register</a>
+                / <a href="/login">Login</a> </span>
                 <a href="#reservations" class="block py-2 text-gold">Reservations</a>
             </div>
         </div>
@@ -213,7 +218,7 @@
     </section>
 
     <!-- Menu Section -->
-    <section id="menu" class="py-20 bg-light">
+    <section id="menu" class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold mb-4">Our Menu</h2>
@@ -222,102 +227,31 @@
 
             <!-- Menu Categories -->
             <div class="flex flex-wrap justify-center mb-12">
-                <button class="menu-btn active bg-gold text-white py-2 px-4 m-1">All</button>
-                <button class="menu-btn bg-white text-dark hover:bg-gold hover:text-white py-2 px-4 m-1 transition duration-300">Starters</button>
-                <button class="menu-btn bg-white text-dark hover:bg-gold hover:text-white py-2 px-4 m-1 transition duration-300">Main Courses</button>
-                <button class="menu-btn bg-white text-dark hover:bg-gold hover:text-white py-2 px-4 m-1 transition duration-300">Salads</button>
-                <button class="menu-btn bg-white text-dark hover:bg-gold hover:text-white py-2 px-4 m-1 transition duration-300">Desserts</button>
+                <a href="{{ route('home') }}" class="py-2 px-4 m-1 transition duration-300 {{ !$selectedCategory ? 'bg-yellow-500 text-white' : 'bg-white text-gray-800 hover:bg-yellow-500 hover:text-white' }} rounded">All</a>
+                @foreach($categories as $category)
+                    <a href="{{ route('home', ['category' => $category->id]) }}" class="py-2 px-4 m-1 transition duration-300 {{ $selectedCategory == $category->id ? 'bg-yellow-500 text-white' : 'bg-white text-gray-800 hover:bg-yellow-500 hover:text-white' }} rounded">{{ $category->name }}</a>
+                @endforeach
             </div>
 
             <!-- Menu Items -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-                <!-- Starters -->
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Samosas</h3>
-                            <p class="text-gray-600 mt-1">Crispy pastry filled with spiced potato, peas, and herbs</p>
+                @forelse($meals as $meal)
+                    <div class="menu-item">
+                        <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
+                            <div>
+                                <h3 class="text-xl font-semibold">{{ $meal->name }}</h3>
+                                <p class="text-gray-600 mt-1">{{ $meal->description ?? 'No description available' }}</p>
+                            </div>
+                            <span class="text-yellow-500 font-medium ml-4">${{ number_format($meal->price, 2) }}</span>
                         </div>
-                        <span class="text-gold font-medium ml-4">$8</span>
                     </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Spring Rolls</h3>
-                            <p class="text-gray-600 mt-1">Crispy rolls with vegetables and minced chicken</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$9</span>
-                    </div>
-                </div>
-
-                <!-- Main Courses -->
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Lamb Curry</h3>
-                            <p class="text-gray-600 mt-1">Tender lamb in a rich curry with lemongrass and ginger</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$22</span>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Shan Noodles</h3>
-                            <p class="text-gray-600 mt-1">Rice noodles with marinated chicken and tomato sauce</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$18</span>
-                    </div>
-                </div>
-
-                <!-- Salads -->
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Tea Leaf Salad</h3>
-                            <p class="text-gray-600 mt-1">Fermented tea leaves with crispy textures and sesame</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$14</span>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Ginger Salad</h3>
-                            <p class="text-gray-600 mt-1">Fresh ginger, cabbage, and peanuts with tangy dressing</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$12</span>
-                    </div>
-                </div>
-
-                <!-- Desserts -->
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Shwe Yin Aye</h3>
-                            <p class="text-gray-600 mt-1">Coconut cream dessert with bread, jelly and tapioca</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$10</span>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="flex justify-between items-start border-b border-gray-200 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Sticky Rice with Mango</h3>
-                            <p class="text-gray-600 mt-1">Sweet coconut sticky rice with fresh mango</p>
-                        </div>
-                        <span class="text-gold font-medium ml-4">$11</span>
-                    </div>
-                </div>
+                @empty
+                    <p class="text-center text-gray-600 col-span-2">No meals available for this category.</p>
+                @endforelse
             </div>
 
             <div class="text-center mt-10">
-                <a href="#" class="inline-block px-6 py-3 bg-gold text-white font-medium">Download Full Menu</a>
+                <a href="#" class="inline-block px-6 py-3 bg-yellow-500 text-white font-medium rounded">Download Full Menu</a>
             </div>
         </div>
     </section>

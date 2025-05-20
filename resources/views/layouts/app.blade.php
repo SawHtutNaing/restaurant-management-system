@@ -13,15 +13,21 @@
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <div class="flex-shrink-0 flex items-center">
-                        <a href="{{ route('dashboard') }}" class="text-xl font-bold">Restaurant</a>
+                        <a href="{{ route('home') }}" class="text-xl font-bold">Restaurant</a>
                     </div>
                     @auth
-                        <a href="{{ route('meals') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Meals</a>
+                        
+                    <a href="{{ route('meals') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Meals</a>
+                    @if(!(auth()->user()->isAdmin()))
+                    <a href="{{ route('my_record') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">My Record</a>
+                        @endif 
                         @if(auth()->user()->isAdmin())
                             <a href="{{ route('inventory') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Inventory</a>
                             <a href="{{ route('users') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Users</a>
                             <a href="{{ route('categories') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Categories</a>
                             <a href="{{ route('orders') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Orders</a>
+                            <a href="{{ route('reservations') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Reservations</a>
+                            
                         @endif
                     @endauth
                 </div>

@@ -7,13 +7,15 @@ use App\Livewire\MealManagement;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\UserManagement;
 use App\Livewire\CategoryManagement;
+use App\Livewire\UserOrdersAndReservations;
 
 use App\Livewire\OrderManagement;
-
-
-
+use App\Livewire\ReservationManager;
 
 Route::get('/', [DashboardController::class, 'index'])->name('home');
+Route::middleware('auth')->post('/orders', [DashboardController::class, 'storeOrder'])->name('orders.store');
+Route::middleware('auth')->post('/reservation', [DashboardController::class, 'storeReservation'])->name('reservation');
+Route::middleware('auth')->get('/my-record',UserOrdersAndReservations::class)->name('my_record');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,6 +31,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/users', UserManagement::class)->name('users');
     Route::get('/categories', CategoryManagement::class)->name('categories');
     Route::get('/orders', OrderManagement::class)->name('orders');
+    Route::get('/reservation-manager', ReservationManager::class)->name('reservations');
 
 
 });

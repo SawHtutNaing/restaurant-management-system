@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ class Order extends Model
         'quantity',
         'total_price',
         'status',
+        'notes',
     ];
 
     protected $casts = [
@@ -30,10 +32,10 @@ class Order extends Model
 
     public function canBeConfirmed()
     {
-        $meal = $this->meal()->with('ingredients')->first();
-        foreach ($meal->ingredients as $ingredient) {
-            $requiredQuantity = $ingredient->pivot->quantity * $this->quantity;
-            if ($ingredient->stock < $requiredQuantity) {
+        $meal = $this->meal()->with('inventories')->first();
+        foreach ($meal->inventories as $inventory) {
+            $requiredQuantity = $inventory->pivot->quantity * $this->quantity;
+            if ($inventory->stock < $requiredQuantity) {
                 return false;
             }
         }
@@ -43,10 +45,10 @@ class Order extends Model
     public function confirm()
     {
         if ($this->canBeConfirmed()) {
-            $meal = $this->meal()->with('ingredients')->first();
-            foreach ($meal->ingredients as $ingredient) {
-                $requiredQuantity = $ingredient->pivot->quantity * $this->quantity;
-                $ingredient->decrement('stock', $requiredQuantity);
+            $meal = $this->meal()->with('inventories')->first();
+            foreach ($meal->inventories as $inventory) {
+                $requiredQuantity = $inventory->pivot->quantity * $this->quantity;
+                $inventory->decrement('stock', $requiredQuantity);
             }
             $this->update(['status' => 'confirmed']);
             return true;

@@ -26,7 +26,10 @@ class Meal extends Model
         return $this->belongsToMany(Inventory::class, 'ingredient_meal')
                     ->withPivot('quantity');
     }
-
+    public function inventories()
+    {
+        return $this->belongsToMany(Inventory::class, 'ingredient_meal')->withPivot('quantity');
+    }
     public function calculateMinimumPrice()
     {
         $totalCost = $this->ingredients->sum(function ($ingredient) {

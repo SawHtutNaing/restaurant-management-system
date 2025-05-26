@@ -7,12 +7,14 @@ use App\Models\Meal;
 use App\Models\Order;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class MealManagement extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
-    public $name, $category_id, $price, $description;
+    public $name, $category_id, $price, $description, $image, $mealImage, $is_signature = false;
     public $ingredients = [];
     public $editing = false;
     public $mealId;
@@ -22,13 +24,15 @@ class MealManagement extends Component
     public $filterPriceMin = '';
     public $filterPriceMax = '';
     public $orderQuantity = [];
-    public $showModal = false; // New property for modal visibility
+    public $showModal = false;
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'category_id' => 'required|exists:categories,id',
         'price' => 'required|numeric|min:0',
         'description' => 'nullable|string',
+        'image' => 'nullable|image|max:2048',
+        'is_signature' => 'boolean',
         'ingredients.*' => 'numeric|min:0',
         'orderQuantity.*' => 'nullable|integer|min:1',
     ];
@@ -74,11 +78,18 @@ class MealManagement extends Component
     {
         $this->validate();
 
+        $imagePath = null;
+        if ($this->image) {
+            $imagePath = $this->image->store('meals', 'public');
+        }
+
         $meal = Meal::create([
             'name' => $this->name,
             'category_id' => $this->category_id,
             'price' => $this->price,
             'description' => $this->description,
+            'image' => $imagePath,
+            'is_signature' => $this->is_signature,
         ]);
 
         $this->syncIngredients($meal);
@@ -95,6 +106,8 @@ class MealManagement extends Component
         $this->category_id = $meal->category_id;
         $this->price = $meal->price;
         $this->description = $meal->description;
+        $this->mealImage = $meal->image;
+        $this->is_signature = $meal->is_signature;
         $this->ingredients = $meal->ingredients->pluck('pivot.quantity', 'id')->toArray();
         $this->minPrice = $meal->calculateMinimumPrice();
         $this->editing = true;
@@ -105,11 +118,22 @@ class MealManagement extends Component
         $this->validate();
 
         $meal = Meal::findOrFail($this->mealId);
+        $imagePath = $meal->image;
+
+        if ($this->image) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $this->image->store('meals', 'public');
+        }
+
         $meal->update([
             'name' => $this->name,
             'category_id' => $this->category_id,
             'price' => $this->price,
             'description' => $this->description,
+            'image' => $imagePath,
+            'is_signature' => $this->is_signature,
         ]);
 
         $this->syncIngredients($meal);
@@ -120,7 +144,11 @@ class MealManagement extends Component
 
     public function delete($id)
     {
-        Meal::findOrFail($id)->delete();
+        $meal = Meal::findOrFail($id);
+        if ($meal->image) {
+            Storage::disk('public')->delete($meal->image);
+        }
+        $meal->delete();
         session()->flash('message', 'Meal deleted successfully.');
     }
 
@@ -178,6 +206,9 @@ class MealManagement extends Component
         $this->category_id = '';
         $this->price = 0;
         $this->description = '';
+        $this->image = null;
+        $this->mealImage = null;
+        $this->is_signature = false;
         $this->ingredients = [];
         $this->editing = false;
         $this->mealId = null;
@@ -195,7 +226,7 @@ class MealManagement extends Component
         }
     }
 
-    public  function getRules()
+    public function getRules()
     {
         return array_merge($this->rules, [
             'price' => ['required', 'numeric', 'min:' . $this->minPrice],

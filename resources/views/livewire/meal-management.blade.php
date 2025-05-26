@@ -22,9 +22,9 @@
             </select>
             <div class="flex gap-2">
                 <input wire:model.live="filterPriceMin" type="number" placeholder="Min Price"
-                       class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                       class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 w-[10rem] dark:text-gray-100">
                 <input wire:model.live="filterPriceMax" type="number" placeholder="Max Price"
-                       class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                       class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 w-[10rem] dark:text-gray-100">
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
         <div class="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-2xl">
                 <h3 class="text-lg font-medium mb-4">{{ $editing ? 'Edit Meal' : 'Create Meal' }}</h3>
-                <form wire:submit.prevent="{{ $editing ? 'update' : 'create' }}">
+                <form wire:submit.prevent="{{ $editing ? 'update' : 'create' }}" enctype="multipart/form-data">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium">Name</label>
@@ -68,6 +68,23 @@
                             <label class="block text-sm font-medium">Description</label>
                             <textarea wire:model="description" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"></textarea>
                             @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Image</label>
+                            <input wire:model="image" type="file" accept="image/*" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                            @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            @if($image && !$editing)
+                                <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="mt-2 max-w-xs">
+                            @elseif($editing && $image)
+                                <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="mt-2 max-w-xs">
+                            @elseif($editing && $mealImage)
+                                <img src="{{ asset('storage/' . $mealImage) }}" alt="Current Image" class="mt-2 max-w-xs">
+                            @endif
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Is Signature Dish?</label>
+                            <input wire:model="is_signature" type="checkbox" class="mt-2 h-5 w-5 text-blue-600 dark:bg-gray-700 dark:border-gray-600">
+                            @error('is_signature') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="mt-4">
@@ -131,10 +148,12 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Image</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ingredients</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Signature</th>
                     @if(auth()->user()->isAdmin() || auth()->user()->isCustomer())
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                     @endif
@@ -143,6 +162,13 @@
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 @foreach($meals as $meal)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($meal->image)
+                                <img src="{{ asset('storage/' . $meal->image) }}" alt="{{ $meal->name }}" class="h-16 w-16 object-cover rounded">
+                            @else
+                                <span class="text-gray-500 dark:text-gray-400">No Image</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $meal->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $meal->category->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${{ $meal->price }}</td>
@@ -151,6 +177,7 @@
                                 {{ $ingredient->name }} ({{ $ingredient->pivot->quantity }} kg)<br>
                             @endforeach
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $meal->is_signature ? 'Yes' : 'No' }}</td>
                         @if(auth()->user()->isAdmin() || auth()->user()->isCustomer())
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if(auth()->user()->isAdmin())

@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Meal;
 use App\Models\Order;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Reservation;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MealsExport;
 
 class DashboardController extends Controller
 {
@@ -22,7 +23,14 @@ class DashboardController extends Controller
             $meals = Meal::all();
         }
 
-        return view('welcome', compact('categories', 'meals', 'selectedCategory'));
+        $signatureMeals = Meal::where('is_signature', true)->get();
+
+        return view('welcome', compact('categories', 'meals', 'signatureMeals', 'selectedCategory'));
+    }
+
+    public function downloadMenu()
+    {
+        return Excel::download(new MealsExport, 'menu.xlsx');
     }
 
     public function storeOrder(Request $request)
@@ -35,7 +43,7 @@ class DashboardController extends Controller
         $meal = Meal::findOrFail($request->meal_id);
         $totalPrice = $meal->price * $request->quantity;
 
-        $order = Order::create([
+        Order::create([
             'user_id' => Auth::id(),
             'meal_id' => $request->meal_id,
             'quantity' => $request->quantity,
@@ -43,25 +51,20 @@ class DashboardController extends Controller
             'status' => 'ordered',
         ]);
 
-        if ($order->confirm()) {
-            return redirect()->route('home')->with('success', 'Order placed and confirmed successfully!');
-        } else {
-            $order->update(['status' => 'cancelled']);
-            return redirect()->route('home')->with('error', 'Order could not be confirmed due to insufficient ingredient stock.');
-        }
+        return redirect()->route('home')->with('success', 'Order placed successfully! Awaiting confirmation.');
     }
 
     public function storeReservation(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|email|max:255',
-        //     'phone' => 'required|string|max:20',
-        //     'guests' => 'required|integer|min:1|max:20',
-        //     'date' => 'required|date|after_or_equal:today',
-        //     'time' => 'required',
-        //     'notes' => 'nullable|string|max:1000',
-        // ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'guests' => 'required|integer|min:1|max:20',
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'required',
+            'notes' => 'nullable|string|max:1000',
+        ]);
 
         $reservation = Reservation::create([
             'user_id' => Auth::check() ? Auth::id() : null,

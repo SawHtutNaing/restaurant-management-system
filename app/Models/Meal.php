@@ -10,6 +10,8 @@ class Meal extends Model
         'category_id',
         'price',
         'description',
+        'image',
+        'is_signature'
     ];
 
     protected $casts = [

@@ -41,6 +41,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
+Route::get('/download-menu', [App\Http\Controllers\DashboardController::class, 'downloadMenu'])->name('download.menu');
 
 require __DIR__.'/auth.php';

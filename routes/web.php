@@ -10,6 +10,8 @@ use App\Livewire\CategoryManagement;
 use App\Livewire\UserOrdersAndReservations;
 
 use App\Livewire\OrderManagement;
+use App\Livewire\Report;
+use App\Livewire\ReportDashboard;
 use App\Livewire\ReservationManager;
 
 Route::get('/', [DashboardController::class, 'index'])->name('home');
@@ -32,6 +34,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories', CategoryManagement::class)->name('categories');
     Route::get('/orders', OrderManagement::class)->name('orders');
     Route::get('/reservation-manager', ReservationManager::class)->name('reservations');
+    Route::get('/report', ReportDashboard::class)->name('report');
+
 
 
 });

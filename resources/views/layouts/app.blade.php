@@ -16,18 +16,20 @@
                         <a href="{{ route('home') }}" class="text-xl font-bold">Restaurant</a>
                     </div>
                     @auth
-                        
-                    <a href="{{ route('meals') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Meals</a>
+
+
                     @if(!(auth()->user()->isAdmin()))
                     <a href="{{ route('my_record') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">My Record</a>
-                        @endif 
+                        @endif
                         @if(auth()->user()->isAdmin())
+                        <a href="{{ route('meals') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Meals</a>
                             <a href="{{ route('inventory') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Inventory</a>
                             <a href="{{ route('users') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Users</a>
                             <a href="{{ route('categories') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Categories</a>
                             <a href="{{ route('orders') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Orders</a>
                             <a href="{{ route('reservations') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Reservations</a>
-                            
+                            <a href="{{ route('report') }}" class="ml-4 flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Report</a>
+
                         @endif
                     @endauth
                 </div>
@@ -49,6 +51,8 @@
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {{ $slot }}
     </main>
-    @livewireScripts
+
+@livewireScripts
+
 </body>
 </html>

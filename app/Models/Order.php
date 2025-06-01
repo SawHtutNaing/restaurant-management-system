@@ -44,6 +44,7 @@ class Order extends Model
 
     public function confirm()
     {
+
         if ($this->canBeConfirmed()) {
             $meal = $this->meal()->with('inventories')->first();
             foreach ($meal->inventories as $inventory) {

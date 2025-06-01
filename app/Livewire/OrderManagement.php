@@ -38,6 +38,7 @@ class OrderManagement extends Component
 
     public function updateStatus($orderId, $status)
     {
+
         $order = Order::findOrFail($orderId);
 
         // Restrict non-admins to only cancelling their own orders
@@ -46,11 +47,12 @@ class OrderManagement extends Component
             return;
         }
 
-        if ($status === 'confirmed') {
+        if ($status == 'confirmed') {
             if (!$order->canBeConfirmed()) {
                 session()->flash('error', 'Cannot confirm order: insufficient inventory.');
                 return;
             }
+
             $order->confirm();
         } else {
             $order->update(['status' => $status]);

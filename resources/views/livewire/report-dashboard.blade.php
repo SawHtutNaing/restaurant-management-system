@@ -10,14 +10,14 @@
                     <option value="month">This Month</option>
                     <option value="year">This Year</option>
                 </select>
-                <select wire:model.live="statusFilter" class="p-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+                {{-- <select wire:model.live="statusFilter" class="p-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400">
                     <option value="">All Statuses</option>
                     <option value="ordered">Ordered</option>
                     <option value="confirmed">Confirmed</option>
                     <option value="cancelled">Cancelled</option>
                     <option value="pending">Pending</option>
                     <option value="rejected">Rejected</option>
-                </select>
+                </select> --}}
             </div>
         </div>
 

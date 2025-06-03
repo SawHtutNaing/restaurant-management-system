@@ -56,6 +56,7 @@ class DashboardController extends Controller
 
     public function storeReservation(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',

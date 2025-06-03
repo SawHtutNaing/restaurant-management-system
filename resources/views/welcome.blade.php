@@ -328,7 +328,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2" for="name">Full Name</label>
-                            <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-gold" id="name" name="text" type="text" placeholder="Your Name">
+                            <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-gold" id="name" name="name" type="text" placeholder="Your Name">
                             @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                         <div>

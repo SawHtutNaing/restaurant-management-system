@@ -9,7 +9,7 @@ return new class extends Migration {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['meat', 'fruit', 'vegetable']);
+            $table->enum('type', ['meat', 'fruit', 'vegetable','grain','dessert','dairy','seafood']);
             $table->decimal('stock', 8, 2)->default(0); // Stock in kg
             $table->decimal('price_per_kg', 8, 2); // Price per kg
             $table->timestamps();

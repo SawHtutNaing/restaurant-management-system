@@ -398,7 +398,7 @@
             </div>
             <div class="max-w-3xl mx-auto">
                 <!-- Add your contact form or details here if needed -->
-                <p class="text-center text-gray-600">Email: info@bagan.com | Phone: (123) 456-7890</p>
+                <p class="text-center text-gray-600">Email: heinhtethtun997@gmail.com | Phone: 09753711045</p>
             </div>
         </div>
     </section>

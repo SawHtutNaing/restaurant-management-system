@@ -168,9 +168,7 @@
                     <p class="text-center text-gray-600 col-span-3">No signature dishes available.</p>
                 @endforelse
             </div>
-            <div class="text-center mt-10">
-                <a href="{{ route('download.menu') }}" class="inline-block px-6 py-3 bg-gold text-white font-medium">Download Full Menu</a>
-            </div>
+
         </div>
     </section>
 
@@ -180,6 +178,9 @@
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold mb-4">Our Menu</h2>
                 <p class="max-w-2xl mx-auto text-gray-600">A selection of authentic Myanmar dishes</p>
+            </div>
+                        <div class="text-center mt-10">
+                <a href="{{ route('download.menu') }}" class="inline-block px-6 py-3 bg-gold text-white font-medium">Download Full Menu</a>
             </div>
 
             <!-- Messages -->
@@ -200,7 +201,7 @@
             @endunless
 
             <!-- Menu Categories -->
-            <div class="flex flex-wrap justify-center mb-12">
+            <div class="flex flex-wrap mt-3 justify-center mb-12">
                 <a href="{{ route('home') }}" class="py-2 px-4 m-1 transition duration-300 {{ !$selectedCategory ? 'bg-gold text-white' : 'bg-white text-dark hover:bg-gold hover:text-white' }} rounded">All</a>
                 @foreach($categories as $category)
                     <a href="{{ route('home', ['category' => $category->id]) }}" class="py-2 px-4 m-1 transition duration-300 {{ $selectedCategory == $category->id ? 'bg-gold text-white' : 'bg-white text-dark hover:bg-gold hover:text-white' }} rounded">{{ $category->name }}</a>
